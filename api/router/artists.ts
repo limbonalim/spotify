@@ -1,8 +1,9 @@
 import {Router} from 'express';
+import mongoose from 'mongoose';
 import Artist from '../models/artistsSchema';
 import {imagesUpload} from '../multer';
 import {IArtistPostData} from '../types';
-import mongoose from "mongoose";
+
 
 
 const artistsRouter = Router();
