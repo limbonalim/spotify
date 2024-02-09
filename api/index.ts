@@ -3,6 +3,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import artistsRouter from './router/artists';
+import albumsRouter from './router/albums';
+
 
 const app = express();
 const port = 8000;
@@ -11,6 +13,7 @@ app.use(json());
 app.use(cors());
 
 app.use('/artists', artistsRouter);
+app.use('/albums', albumsRouter);
 
 
 const run = async () => {
