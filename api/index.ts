@@ -2,11 +2,15 @@ import express, { json } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import artistsRouter from './router/artists';
+
 const app = express();
 const port = 8000;
 
 app.use(json());
 app.use(cors());
+
+app.use('/artists', artistsRouter);
 
 
 const run = async () => {
