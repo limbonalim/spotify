@@ -2,30 +2,56 @@ import {Router} from 'express';
 import mongoose, {Types} from 'mongoose';
 import Track from '../models/tracksSchema';
 import {ITrackPostData} from '../types';
+import Album from "../models/albumsSchema";
 
 
 const tracksRouter = Router();
 
 tracksRouter.get('/', async (req, res, next) => {
   try {
-    let result;
+
     if (req.query.album) {
       let albumId: Types.ObjectId;
       try {
         albumId = new Types.ObjectId(req.query.album as string);
       } catch {
-        return res.status(404).send({error: 'Wrong ObjectId!'});
+        return res.status(404).send({error: 'Wrong album ObjectId!'});
       }
 
-      result = await Track.find({album: albumId});
-    } else {
-      result = await Track.find();
-    }
+      const result = await Track.find({album: albumId});
 
-    if (!result[0]) {
-      return res.status(404).send({error: 'Not found'});
+      if (!result[0]) {
+        return res.status(404).send({error: 'Not found'});
+      }
+      return res.send(result);
+    } else if (req.query.artist) {
+      let artistId: Types.ObjectId;
+      try {
+        artistId = new Types.ObjectId(req.query.artist as string)
+      } catch {
+        return res.status(404).send({error: 'Wrong artist ObjectId!'});
+      }
+      const albums = await Album.find({artist: artistId});
+
+      if (albums) {
+        const test = albums.map(item => item._id);
+        return Promise.all(test.map(async (item) => {
+          return Promise.resolve(Track.find({album: item}))
+        })).then(data => {
+          data.forEach((item) => [...item])
+          return res.send(data);
+        })
+      }
+
+      return res.status(404).send({error: 'Not found!'})
+    } else {
+      const result = await Track.find();
+
+      if (!result[0]) {
+        return res.status(404).send({error: 'Not found'});
+      }
+      return res.send(result);
     }
-    return res.send(result);
   } catch (e) {
     next(e)
   }
