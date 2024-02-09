@@ -11,3 +11,9 @@ export interface IAlbumPostData {
   artist: string;
   image: string | null;
 }
+
+export interface ITrackPostData {
+  title: string;
+  album: string;
+  duration: string;
+}
