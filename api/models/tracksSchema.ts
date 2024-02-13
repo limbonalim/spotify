@@ -1,7 +1,8 @@
 import {Schema, model, Types} from 'mongoose';
 import Album from './albumsSchema';
+import type {ITrackFields, ITrackModel} from '../types';
 
-const tracksSchema = new Schema({
+const tracksSchema = new Schema<ITrackFields, ITrackModel, {}>({
   title: {
     type: String,
     required: true
@@ -24,6 +25,6 @@ const tracksSchema = new Schema({
   }
 });
 
-const Track = model('tracks', tracksSchema);
+const Track = model<ITrackFields, ITrackModel>('tracks', tracksSchema);
 
 export default Track;

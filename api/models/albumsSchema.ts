@@ -1,7 +1,8 @@
 import {Schema, model, Types} from 'mongoose';
 import Artist from './artistsSchema';
+import type {IAlbumsFields, IAlbumsModel} from '../types';
 
-const albumsSchema = new Schema({
+const albumsSchema = new Schema<IAlbumsFields, IAlbumsModel, {}>({
   title: {
     type: String,
     required: true,
@@ -25,6 +26,6 @@ const albumsSchema = new Schema({
   image: String,
 });
 
-const Album = model('albums', albumsSchema);
+const Album = model<IAlbumsFields, IAlbumsModel>('albums', albumsSchema);
 
 export default Album;
