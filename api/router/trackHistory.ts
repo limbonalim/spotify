@@ -28,16 +28,6 @@ trackHistoryRouter.post('/', async (req, res, next) => {
 			return res.status(404).send({ error: 'Wrong track ObjectId!' });
 		}
 
-		const checkHistory = await TrackHistory.findOne({
-			user: user._id,
-			track: trackId,
-		});
-		if (checkHistory) {
-			return res
-				.status(409)
-				.send({ error: 'User is already have this track in history' });
-		}
-
 		const trackHistoryRecord = new TrackHistory({
 			user: user._id,
 			track: trackId,
