@@ -13,7 +13,7 @@ const Layout:React.FC<PropsWithChildren> = ({children}) => {
       <header>
       </header>
       <main>
-        <Container>
+        <Container sx={{mt: 2}}>
           {children}
         </Container>
       </main>
