@@ -1,24 +1,5 @@
 import { Model, Schema } from 'mongoose';
 
-export interface IArtistPostData {
-	name: string;
-	photo: string | null;
-	info: string;
-}
-
-export interface IAlbumPostData {
-	title: string;
-	year: string;
-	artist: string;
-	image: string | null;
-}
-
-export interface ITrackPostData {
-	title: string;
-	album: string;
-	duration: string;
-}
-
 export interface IUserFields {
 	username: string;
 	password: string;
@@ -43,6 +24,7 @@ export type ITrackHistoryModel = Model<ITrackHistoryFields, unknown, unknown>;
 export interface ITrackFields {
 	title: string;
 	album: Schema.Types.ObjectId;
+	numberInAlbum: number;
 	duration: string;
 }
 
@@ -58,7 +40,7 @@ export type IArtistModel = Model<IArtistFields, unknown, unknown>;
 
 export interface IAlbumsFields {
 	title: string;
-	year: string;
+	year: number;
 	artist: Schema.Types.ObjectId;
 	image?: string;
 }

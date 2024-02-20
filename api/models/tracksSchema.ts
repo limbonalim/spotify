@@ -19,6 +19,10 @@ const tracksSchema = new Schema<ITrackFields, ITrackModel, unknown>({
 			message: 'Album does not exist!',
 		},
 	},
+	numberInAlbum: {
+		type: Number,
+		required: true,
+	},
 	duration: {
 		type: String,
 		required: true,

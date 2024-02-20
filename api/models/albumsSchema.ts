@@ -8,7 +8,7 @@ const albumsSchema = new Schema<IAlbumsFields, IAlbumsModel, unknown>({
 		required: true,
 	},
 	year: {
-		type: String,
+		type: Number,
 		required: true,
 	},
 	artist: {
