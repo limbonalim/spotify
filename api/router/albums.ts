@@ -15,7 +15,9 @@ albumsRouter.get('/', async (req, res, next) => {
 				return res.status(404).send({ error: 'Wrong ObjectId!' });
 			}
 
-			const result = await Album.find({ artist: artistId });
+			const result = await Album.find({ artist: artistId }, null, {
+				sort: { year: -1 },
+			});
 			return res.send(result);
 		}
 
