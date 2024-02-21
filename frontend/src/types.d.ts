@@ -8,3 +8,10 @@ export interface IArtist {
 export interface IMyError {
   error: string;
 }
+
+export interface IAlbum {
+  _id: string;
+  title: string;
+  year: number;
+  image?: string;
+}

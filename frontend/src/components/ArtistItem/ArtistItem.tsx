@@ -8,7 +8,7 @@ import { CardActionArea, Grid, Link } from '@mui/material';
 import {BASE_URL} from '../../constants.ts';
 import noImage from '../../assets/NoImage.png';
 
-const memoArtistItem: React.FC<IArtist> = memo(function ArtistItem ({_id, name, photo, info}) {
+const memoArtistItem: React.FC<IArtist> = memo(function ArtistItem ({_id, name, photo}) {
   const path = `/albums/${_id}`;
   const image = photo ? BASE_URL + '/' + photo : noImage;
 
@@ -21,14 +21,11 @@ const memoArtistItem: React.FC<IArtist> = memo(function ArtistItem ({_id, name, 
               component="img"
               height="140"
               image={image}
-              alt="green iguana"
+              alt={name}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 {name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {info}
               </Typography>
             </CardContent>
           </CardActionArea>
