@@ -2,13 +2,12 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {getAlbums} from './albumsThunks.ts';
 import {RootState} from '../../app/store.ts';
 import type {IAlbum, IMyError} from '../../types';
-import {ValidationError} from "../../types";
 
 interface AlbumState {
   albums: IAlbum[];
   currentAlbum: IAlbum | null;
   isLoading: boolean;
-  errorMessage: IMyError | ValidationError | undefined;
+  errorMessage: IMyError | undefined;
 }
 
 const initialState: AlbumState = {
