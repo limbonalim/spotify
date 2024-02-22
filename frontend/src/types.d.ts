@@ -15,3 +15,11 @@ export interface IAlbum {
   year: number;
   image?: string;
 }
+
+export interface ITrack {
+  _id: string;
+  title: string;
+  album: string;
+  numberInAlbum: number;
+  duration: string;
+}
