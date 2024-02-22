@@ -28,7 +28,9 @@ tracksRouter.get('/', async (req, res, next) => {
 			} catch {
 				return res.status(404).send({ error: 'Wrong artist ObjectId!' });
 			}
-			const albums = await Album.find({ artist: artistId });
+			const albums = await Album.find({ artist: artistId }, null, {
+				sort: { numberInAlbum: 1 },
+			});
 
 			if (albums) {
 				const test = albums.map((item) => item._id);
