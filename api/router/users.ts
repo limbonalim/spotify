@@ -17,7 +17,7 @@ usersRouter.post('/', async (req, res, next) => {
       return res.send(user);
     }
 
-    return res.status(400).send({error: 'username and password should be in request'});
+    return res.status(400).send({message: 'username and password should be in request'});
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
       return res.status(422).send(e);
@@ -33,12 +33,12 @@ usersRouter.post('/sessions', async (req, res, next) => {
       const user = await User.findOne({username: req.body.username});
 
       if (!user) {
-        return res.status(422).send({error: 'Username and/or password not found!'});
+        return res.status(422).send({message: 'Username and/or password not found!'});
       }
       const isMatch = await user.checkPassword(req.body.password);
 
       if (!isMatch) {
-        return res.status(422).send({error: 'Username and/or password not found!'});
+        return res.status(422).send({message: 'Username and/or password not found!'});
       }
 
       user.generateToken();
@@ -47,7 +47,7 @@ usersRouter.post('/sessions', async (req, res, next) => {
       return res.send({message: 'username and password are correct', user});
     }
 
-    return res.status(400).send({error: 'username and password should be in request'});
+    return res.status(400).send({message: 'username and password should be in request'});
   } catch (e) {
 
     next(e);

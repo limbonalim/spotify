@@ -14,18 +14,18 @@ trackHistoryRouter.post('/', async (req, res, next) => {
 		let trackId: Types.ObjectId;
 
 		if (!token) {
-			return res.status(401).send({ error: 'No token present' });
+			return res.status(401).send({ message: 'No token present' });
 		}
 		const user = await User.findOne({ token });
 
 		if (!user) {
-			return res.status(401).send({ error: 'Wrong token' });
+			return res.status(401).send({ message: 'Wrong token' });
 		}
 
 		try {
 			trackId = new Types.ObjectId(req.body.track as string);
 		} catch {
-			return res.status(404).send({ error: 'Wrong track ObjectId!' });
+			return res.status(404).send({ message: 'Wrong track ObjectId!' });
 		}
 
 		const trackHistoryRecord = new TrackHistory({

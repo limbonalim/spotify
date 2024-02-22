@@ -12,7 +12,7 @@ albumsRouter.get('/', async (req, res, next) => {
 			try {
 				artistId = new Types.ObjectId(req.query.artist as string);
 			} catch {
-				return res.status(404).send({ error: 'Wrong ObjectId!' });
+				return res.status(404).send({ message: 'Wrong ObjectId!' });
 			}
 
 			const result = await Album.find({ artist: artistId }, null, {
@@ -34,7 +34,7 @@ albumsRouter.get('/:id', async (req, res, next) => {
 		try {
 			_id = new Types.ObjectId(req.params.id);
 		} catch {
-			return res.status(404).send({ error: 'Wrong ObjectId!' });
+			return res.status(404).send({ message: 'Wrong ObjectId!' });
 		}
 
 		const result = await Album.findById(_id).populate(

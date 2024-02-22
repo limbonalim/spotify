@@ -10,7 +10,7 @@ artistsRouter.get('/', async (req, res, next) => {
 		const result = await Artist.find();
 
 		if (!result[0]) {
-			return res.status(404).send({ error: 'Not found' });
+			return res.status(404).send({ message: 'Not found' });
 		}
 		return res.send(result);
 	} catch (e) {

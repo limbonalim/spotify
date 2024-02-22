@@ -8,7 +8,7 @@ import {getArtists} from '../Home/artistsThunks.ts';
 import {getAlbums} from '../ArtistPage/albumsThunks.ts';
 import {getTracks} from './tracksThunks.ts';
 import {getCurrentAlbum, selectCurrentAlbum} from '../ArtistPage/albumsSlice.ts';
-import { selectIsLoading, selectTracks } from './tracksSlice.ts';
+import {selectErrorMessage, selectIsLoading, selectTracks} from './tracksSlice.ts';
 import TrackItem from '../../components/TrackItem/TrackItem.tsx';
 
 
@@ -17,6 +17,7 @@ const AlbumPage = () => {
   const dispatch = useAppDispatch();
   const artist = useAppSelector(selectCurrentArtist);
   const album = useAppSelector(selectCurrentAlbum);
+  const error = useAppSelector(selectErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
   const tracks = useAppSelector(selectTracks);
   const {artistId, id} = useParams();
@@ -50,6 +51,7 @@ const AlbumPage = () => {
         </Grid>
       </Grid>
       <Grid item container spacing={2} flexDirection='column'>
+        {error? <span>{error.message}</span>: ''}
         <Typography variant='h5' color='gray'>Tracks:</Typography>
         {isLoading? <Loader/> : render}
       </Grid>

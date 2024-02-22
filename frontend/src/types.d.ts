@@ -6,7 +6,7 @@ export interface IArtist {
 }
 
 export interface IMyError {
-  error: string;
+  message: string;
 }
 
 export interface IAlbum {
@@ -22,4 +22,16 @@ export interface ITrack {
   album: string;
   numberInAlbum: number;
   duration: string;
+}
+
+export interface ValidationError {
+  errors: {
+    [key: string]: {
+      name: string;
+      message: string;
+    }
+  },
+  message: string;
+  name: string;
+  _message: string;
 }

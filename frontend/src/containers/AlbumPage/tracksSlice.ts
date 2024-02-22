@@ -36,5 +36,6 @@ const tracksSlice = createSlice({
 
 export const selectTracks = (state: RootState) => state.tracks.tracks;
 export const selectIsLoading = (state: RootState) => state.tracks.isLoading;
+export const selectErrorMessage = (state: RootState) => state.tracks.errorMessage;
 
 export const tracksReducer = tracksSlice.reducer;

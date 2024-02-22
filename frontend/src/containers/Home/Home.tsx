@@ -3,13 +3,14 @@ import {useEffect} from 'react';
 import ArtistItem from '../../components/ArtistItem/ArtistItem.tsx';
 import Loader from '../../components/UI/Loader/Loader.tsx';
 import {useAppDispatch, useAppSelector} from '../../app/hooks.ts';
-import {selectArtists, selectIsLoading} from './artistsSlice.ts';
+import {selectArtists, selectErrorMessage, selectIsLoading} from './artistsSlice.ts';
 import {getArtists} from './artistsThunks.ts';
 
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const artists = useAppSelector(selectArtists);
+  const error = useAppSelector(selectErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
   useEffect(() => {
     dispatch(getArtists());
@@ -20,6 +21,7 @@ const Home = () => {
   ));
   return (
     <Grid container spacing={2}>
+      {error? <span>{error.message}</span> : ''}
       {isLoading? <Loader/> : render}
     </Grid>
   );

@@ -4,7 +4,7 @@ import {Grid, Typography} from '@mui/material';
 import {useAppDispatch, useAppSelector} from '../../app/hooks.ts';
 import {getArtist, selectCurrentArtist} from '../Home/artistsSlice.ts';
 import {getArtists} from '../Home/artistsThunks.ts';
-import {selectAlbums, selectIsLoading} from './albumsSlice.ts';
+import {selectAlbums, selectErrorMessage, selectIsLoading} from './albumsSlice.ts';
 import {getAlbums} from './albumsThunks.ts';
 import {BASE_URL} from '../../constants.ts';
 import AlbumItem from '../../components/AlbumItem/AlbumItem.tsx';
@@ -16,6 +16,7 @@ const ArtistPage = () => {
   const dispatch = useAppDispatch();
   const artist = useAppSelector(selectCurrentArtist);
   const albums = useAppSelector(selectAlbums);
+  const error = useAppSelector(selectErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
   const {id} = useParams();
 
@@ -50,6 +51,7 @@ const ArtistPage = () => {
         </Grid>
       </Grid>
       <Grid item container flexDirection='column'>
+        {error? <span>{error.message}</span>: ''}
         <Typography variant='h5' color='gray'>Albums:</Typography>
         {isLoading? <Loader/> : render}
       </Grid>
