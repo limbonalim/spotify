@@ -5,14 +5,14 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks.ts';
 import {getArtist, selectCurrentArtist} from '../Home/artistsSlice.ts';
 import {getArtists} from '../Home/artistsThunks.ts';
 import {selectAlbums, selectIsLoading} from './albumsSlice.ts';
-import {getAlbums} from './albumsThunk.ts';
+import {getAlbums} from './albumsThunks.ts';
 import {BASE_URL} from '../../constants.ts';
 import AlbumItem from '../../components/AlbumItem/AlbumItem.tsx';
 import Loader from '../../components/UI/Loader/Loader.tsx';
 import noImage from '../../assets/NoImage.png';
 
 
-const AlbumsPage = () => {
+const ArtistPage = () => {
   const dispatch = useAppDispatch();
   const artist = useAppSelector(selectCurrentArtist);
   const albums = useAppSelector(selectAlbums);
@@ -49,11 +49,12 @@ const AlbumsPage = () => {
           <Typography color='gray'>{artist.info}</Typography>
         </Grid>
       </Grid>
-      <Grid item container>
+      <Grid item container flexDirection='column'>
+        <Typography variant='h5' color='gray'>Albums:</Typography>
         {isLoading? <Loader/> : render}
       </Grid>
     </Grid>
   );
 };
 
-export default AlbumsPage;
+export default ArtistPage;
