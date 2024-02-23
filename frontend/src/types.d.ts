@@ -35,3 +35,19 @@ export interface ValidationError {
   name: string;
   _message: string;
 }
+
+export interface IRegisterForm {
+  username: string;
+  password: string;
+}
+
+export interface ILoginForm {
+  username: string;
+  password: string;
+}
+
+export interface IUser {
+  _id: string;
+  username: string;
+  token: string;
+}
