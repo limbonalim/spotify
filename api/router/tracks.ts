@@ -15,7 +15,9 @@ tracksRouter.get('/', async (req, res, next) => {
 				return res.status(404).send({ message: 'Wrong album ObjectId!' });
 			}
 
-			const result = await Track.find({ album: albumId });
+			const result = await Track.find({ album: albumId }, null, {
+				sort: { numberInAlbum: 1 },
+			});
 
 			if (!result[0]) {
 				return res.status(404).send({ message: 'Not found' });
@@ -28,9 +30,7 @@ tracksRouter.get('/', async (req, res, next) => {
 			} catch {
 				return res.status(404).send({ message: 'Wrong artist ObjectId!' });
 			}
-			const albums = await Album.find({ artist: artistId }, null, {
-				sort: { numberInAlbum: 1 },
-			});
+			const albums = await Album.find({ artist: artistId });
 
 			if (albums) {
 				const test = albums.map((item) => item._id);
@@ -46,7 +46,9 @@ tracksRouter.get('/', async (req, res, next) => {
 
 			return res.status(404).send({ message: 'Not found!' });
 		} else {
-			const result = await Track.find();
+			const result = await Track.find({}, null, {
+				sort: { numberInAlbum: 1 },
+			});
 
 			if (!result[0]) {
 				return res.status(404).send({ message: 'Not found' });
