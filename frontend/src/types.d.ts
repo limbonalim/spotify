@@ -51,3 +51,31 @@ export interface IUser {
   username: string;
   token: string;
 }
+
+export interface ITracksHistoryRecord {
+  token: string;
+  track: string;
+}
+
+export interface ITrackHistory {
+  _id: string;
+  track: ITrackMutation;
+  datetime: string;
+}
+
+type IArtistMutation = Pick<IArtist, '_id', 'name'>;
+
+interface IAlbumMutation extends IAlbum {
+  artist: IArtistMutation;
+}
+
+interface ITrackMutation {
+  _id: string;
+  title: string;
+  album: IAlbumMutation;
+  numberInAlbum: number;
+  duration: string;
+}
+
+
+
