@@ -7,9 +7,13 @@ import AlbumPage from './containers/AlbumPage/AlbumPage.tsx';
 import Register from './containers/Users/Register.tsx';
 import Login from './containers/Users/Login.tsx';
 import TrackHistoryPage from './containers/TrackHistoryPage/TrackHistoryPage.tsx';
+import Player from './components/UI/Player/Player.tsx';
+import { useAppSelector } from './app/hooks.ts';
+import { selectCurrentTrack } from './containers/AlbumPage/tracksSlice.ts';
 
 
 const App = () => {
+  const currentTrack = useAppSelector(selectCurrentTrack);
 
   return (
     <>
@@ -23,6 +27,7 @@ const App = () => {
           <Route path="/tracks/:artistId/:id" element={(<AlbumPage/>)}/>
           <Route path="*" element={(<NotFound/>)}/>
         </Routes>
+        {currentTrack && <Player url={currentTrack ? currentTrack : ''}/>}
       </Layout>
     </>
   );

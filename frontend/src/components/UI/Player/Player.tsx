@@ -17,7 +17,7 @@ const Player: React.FC<Props> = ({url}) => {
   };
 
   return (
-    <Box sx={{position: 'absolute', bottom: 0, right: 0}}>
+    <Box sx={{position: 'absolute', bottom: "1px", right: 0}}>
       <IconButton aria-label="close" onClick={onClick}>
         <CloseIcon />
       </IconButton>

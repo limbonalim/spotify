@@ -1,10 +1,10 @@
 import { Grid } from '@mui/material';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import ArtistItem from '../../components/ArtistItem/ArtistItem.tsx';
 import Loader from '../../components/UI/Loader/Loader.tsx';
-import {useAppDispatch, useAppSelector} from '../../app/hooks.ts';
-import {selectArtists, selectErrorMessage, selectIsLoading} from './artistsSlice.ts';
-import {getArtists} from './artistsThunks.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { selectArtists, selectErrorMessage, selectIsLoading } from './artistsSlice.ts';
+import { getArtists } from './artistsThunks.ts';
 
 
 const Home = () => {
@@ -12,6 +12,7 @@ const Home = () => {
   const artists = useAppSelector(selectArtists);
   const error = useAppSelector(selectErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
+
   useEffect(() => {
     dispatch(getArtists());
   }, [dispatch]);
@@ -21,8 +22,8 @@ const Home = () => {
   ));
   return (
     <Grid container spacing={2}>
-      {error? <span>{error.message}</span> : ''}
-      {isLoading? <Loader/> : render}
+      {error ? <span>{error.message}</span> : ''}
+      {isLoading ? <Loader/> : render}
     </Grid>
   );
 };

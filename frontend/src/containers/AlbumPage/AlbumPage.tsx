@@ -9,9 +9,8 @@ import { getArtists } from '../Home/artistsThunks.ts';
 import { getAlbums } from '../ArtistPage/albumsThunks.ts';
 import { getTracks } from './tracksThunks.ts';
 import { getCurrentAlbum, selectCurrentAlbum } from '../ArtistPage/albumsSlice.ts';
-import { selectCurrentTrack, selectErrorMessage, selectIsLoading, selectTracks } from './tracksSlice.ts';
+import { selectErrorMessage, selectIsLoading, selectTracks } from './tracksSlice.ts';
 import { selectRecordErrorMessage } from '../TrackHistoryPage/tracksHistorySlice.ts';
-import Player from "../../components/UI/Player/Player.tsx";
 
 
 const AlbumPage = () => {
@@ -22,7 +21,6 @@ const AlbumPage = () => {
   const playError = useAppSelector(selectRecordErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
   const tracks = useAppSelector(selectTracks);
-  const currentTrack = useAppSelector(selectCurrentTrack);
   const {artistId, id} = useParams();
 
   const renderAlbum = useCallback(async () => {
@@ -54,7 +52,6 @@ const AlbumPage = () => {
         </Grid>
       </Grid>
       <Grid item container spacing={2} flexDirection="column">
-        {currentTrack && <Player url={currentTrack ? currentTrack : ''}/>}
         {error && (
           <Alert severity="error" sx={{mt: 3, width: '100%'}}>
             {error.message}
