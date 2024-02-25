@@ -66,6 +66,7 @@ tracksRouter.post('/', async (req, res, next) => {
 			title: req.body.title,
 			album: req.body.album,
 			numberInAlbum: parseInt(req.body.numberInAlbum),
+			url: req.body.url,
 			duration: req.body.duration,
 		});
 		await track.save();

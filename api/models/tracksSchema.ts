@@ -23,6 +23,7 @@ const tracksSchema = new Schema<ITrackFields, ITrackModel, unknown>({
 		type: Number,
 		required: true,
 	},
+	url: String,
 	duration: {
 		type: String,
 		required: true,

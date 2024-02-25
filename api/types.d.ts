@@ -25,6 +25,7 @@ export interface ITrackFields {
 	title: string;
 	album: Schema.Types.ObjectId;
 	numberInAlbum: number;
+	url?: string;
 	duration: string;
 }
 

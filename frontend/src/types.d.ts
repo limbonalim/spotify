@@ -21,6 +21,7 @@ export interface ITrack {
   title: string;
   album: string;
   numberInAlbum: number;
+  url?: string;
   duration: string;
 }
 
@@ -74,6 +75,7 @@ interface ITrackMutation {
   title: string;
   album: IAlbumMutation;
   numberInAlbum: number;
+  url?: string;
   duration: string;
 }
 

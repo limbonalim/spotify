@@ -9,8 +9,9 @@ import { getArtists } from '../Home/artistsThunks.ts';
 import { getAlbums } from '../ArtistPage/albumsThunks.ts';
 import { getTracks } from './tracksThunks.ts';
 import { getCurrentAlbum, selectCurrentAlbum } from '../ArtistPage/albumsSlice.ts';
-import { selectErrorMessage, selectIsLoading, selectTracks } from './tracksSlice.ts';
+import { selectCurrentTrack, selectErrorMessage, selectIsLoading, selectTracks } from './tracksSlice.ts';
 import { selectRecordErrorMessage } from '../TrackHistoryPage/tracksHistorySlice.ts';
+import Player from "../../components/UI/Player/Player.tsx";
 
 
 const AlbumPage = () => {
@@ -21,6 +22,7 @@ const AlbumPage = () => {
   const playError = useAppSelector(selectRecordErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
   const tracks = useAppSelector(selectTracks);
+  const currentTrack = useAppSelector(selectCurrentTrack);
   const {artistId, id} = useParams();
 
   const renderAlbum = useCallback(async () => {
@@ -37,8 +39,8 @@ const AlbumPage = () => {
     void renderAlbum();
   }, [renderAlbum]);
 
-  const render = tracks.map(({_id, title, duration, numberInAlbum, album}) => (
-    <TrackItem key={_id} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} album={album}/>
+  const render = tracks.map(({_id, title, duration, numberInAlbum, url}) => (
+    <TrackItem key={_id} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url}/>
   ));
 
   return (artist && album) && (
@@ -52,6 +54,7 @@ const AlbumPage = () => {
         </Grid>
       </Grid>
       <Grid item container spacing={2} flexDirection="column">
+        {currentTrack && <Player url={currentTrack ? currentTrack : ''}/>}
         {error && (
           <Alert severity="error" sx={{mt: 3, width: '100%'}}>
             {error.message}
