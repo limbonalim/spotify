@@ -24,6 +24,11 @@ const albumsSchema = new Schema<IAlbumsFields, IAlbumsModel, unknown>({
 		},
 	},
 	image: String,
+	isPublished: {
+		type: Boolean,
+		required: true,
+		default: false,
+	}
 });
 
 const Album = model<IAlbumsFields, IAlbumsModel>('albums', albumsSchema);

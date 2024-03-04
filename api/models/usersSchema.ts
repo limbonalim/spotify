@@ -5,6 +5,11 @@ import type { IUserFields, IUserMethods, IUserModel } from '../types';
 
 const SALT_WORK_FACTOR = 10;
 
+export enum Roles {
+	user = 'user',
+	admin = 'admin'
+}
+
 const usersSchema = new Schema<IUserFields, IUserModel, IUserMethods>({
 	username: {
 		type: String,
@@ -22,6 +27,12 @@ const usersSchema = new Schema<IUserFields, IUserModel, IUserMethods>({
 	password: {
 		type: String,
 		required: true,
+	},
+	role: {
+		type: String,
+		required: true,
+		default: 'user',
+		enum: Roles,
 	},
 	token: {
 		type: String,

@@ -8,6 +8,11 @@ const artistsSchema = new Schema<IArtistFields, IArtistModel, unknown>({
 	},
 	photo: String,
 	info: String,
+	isPublished: {
+		type: Boolean,
+		required: true,
+		default: false,
+	}
 });
 
 const Artist = model<IArtistFields, IArtistModel>('artists', artistsSchema);

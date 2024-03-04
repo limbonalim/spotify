@@ -3,6 +3,7 @@ import { Model, Schema } from 'mongoose';
 export interface IUserFields {
 	username: string;
 	password: string;
+	role: string;
 	token: string;
 }
 
@@ -27,6 +28,7 @@ export interface ITrackFields {
 	numberInAlbum: number;
 	url?: string;
 	duration: string;
+	isPublished: boolean;
 }
 
 export type ITrackModel = Model<ITrackFields, unknown, unknown>;
@@ -35,6 +37,7 @@ export interface IArtistFields {
 	name: string;
 	photo?: string;
 	info?: string;
+	isPublished: boolean;
 }
 
 export type IArtistModel = Model<IArtistFields, unknown, unknown>;
@@ -44,6 +47,7 @@ export interface IAlbumsFields {
 	year: number;
 	artist: Schema.Types.ObjectId;
 	image?: string;
+	isPublished: boolean;
 }
 
 export type IAlbumsModel = Model<IAlbumsFields, unknown, unknown>;

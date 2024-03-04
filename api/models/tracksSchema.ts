@@ -28,6 +28,11 @@ const tracksSchema = new Schema<ITrackFields, ITrackModel, unknown>({
 		type: String,
 		required: true,
 	},
+	isPublished: {
+		type: Boolean,
+		required: true,
+		default: false,
+	}
 });
 
 const Track = model<ITrackFields, ITrackModel>('tracks', tracksSchema);
