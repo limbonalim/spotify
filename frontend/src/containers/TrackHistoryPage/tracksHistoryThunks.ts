@@ -1,15 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
 import axiosApi from '../../axiosApi.ts';
-import type { IMyError, ITracksHistoryRecord, ValidationError, ITrackHistory } from '../../types';
+import type { IMyError, ValidationError, ITrackHistory } from '../../types';
 
-export const createNewRecord = createAsyncThunk<void, ITracksHistoryRecord, {
+export const createNewRecord = createAsyncThunk<void, string, {
   rejectValue: IMyError | ValidationError
 }>(
   'tracksHistory/createNewRecord',
-  async ({track, token}, {rejectWithValue}) => {
+  async (track, {rejectWithValue}) => {
     try {
-      await axiosApi.post('/track_history', {track}, {headers: {'Authorization': `Barer ${token}`}});
+      await axiosApi.post('/track_history', {track});
 
     } catch (e) {
       if (isAxiosError(e) && e.response) {
@@ -27,11 +27,11 @@ export const createNewRecord = createAsyncThunk<void, ITracksHistoryRecord, {
   }
 );
 
-export const getTrackHistory = createAsyncThunk<ITrackHistory[], string, { rejectValue: IMyError }>(
+export const getTrackHistory = createAsyncThunk<ITrackHistory[], void, { rejectValue: IMyError }>(
   'tracksHistory/getTrackHistory',
-  async (token, {rejectWithValue}) => {
+  async (_, {rejectWithValue}) => {
     try {
-      const response = await axiosApi.get('/track_history', {headers: {'Authorization': `Barer ${token}`}});
+      const response = await axiosApi.get('/track_history');
 
       return response.data;
     } catch (e) {

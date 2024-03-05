@@ -16,7 +16,7 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
 
   const onClick = async () => {
     if (user) {
-      await dispatch(createNewRecord({token: user.token, track: _id})).unwrap();
+      await dispatch(createNewRecord(_id)).unwrap();
       if (url) {
         dispatch(getCurrentTrack(url));
       }
