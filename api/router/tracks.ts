@@ -2,6 +2,8 @@ import { Router } from 'express';
 import mongoose, { Types } from 'mongoose';
 import Track from '../models/tracksSchema';
 import Album from '../models/albumsSchema';
+import auth from '../middleware/auth';
+import permit from '../middleware/permit';
 
 const tracksRouter = Router();
 
@@ -60,7 +62,7 @@ tracksRouter.get('/', async (req, res, next) => {
 	}
 });
 
-tracksRouter.post('/', async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
 	try {
 		const track = new Track({
 			title: req.body.title,
@@ -76,6 +78,22 @@ tracksRouter.post('/', async (req, res, next) => {
 		if (e instanceof mongoose.Error.ValidationError) {
 			return res.status(422).send(e);
 		}
+		next(e);
+	}
+});
+
+tracksRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+	try {
+		let trackId: Types.ObjectId;
+		try {
+			trackId = new Types.ObjectId(req.params.id as string);
+		} catch {
+			return res.status(404).send({ message: 'Wrong track ObjectId!' });
+		}
+
+		const track = await Track.findOneAndDelete(trackId);
+		return res.send({ message: 'Success', track });
+	} catch (e) {
 		next(e);
 	}
 });

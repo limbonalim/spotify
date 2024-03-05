@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import Artist from '../models/artistsSchema';
 import { imagesUpload } from '../multer';
+import auth from '../middleware/auth';
+import permit from '../middleware/permit';
 
 const artistsRouter = Router();
 
@@ -20,6 +22,7 @@ artistsRouter.get('/', async (req, res, next) => {
 
 artistsRouter.post(
 	'/',
+	auth,
 	imagesUpload.single('photo'),
 	async (req, res, next) => {
 		try {
@@ -39,5 +42,22 @@ artistsRouter.post(
 		}
 	},
 );
+
+artistsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+	try {
+		let artistId;
+		try {
+			artistId = new Types.ObjectId(req.params.id as string);
+		} catch {
+			return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+		}
+
+		const artist = await Artist.findOneAndDelete(artistId);
+
+		return res.send({ message: 'Success', artist });
+	} catch (e) {
+		next(e);
+	}
+});
 
 export default artistsRouter;

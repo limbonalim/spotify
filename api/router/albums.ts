@@ -2,6 +2,9 @@ import { Router } from 'express';
 import mongoose, { Types } from 'mongoose';
 import { imagesUpload } from '../multer';
 import Album from '../models/albumsSchema';
+import auth from '../middleware/auth';
+import permit from '../middleware/permit';
+import Artist from '../models/artistsSchema';
 
 const albumsRouter = Router();
 
@@ -47,21 +50,43 @@ albumsRouter.get('/:id', async (req, res, next) => {
 	}
 });
 
-albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
-	try {
-		const album = new Album({
-			title: req.body.title,
-			year: parseInt(req.body.year),
-			artist: req.body.artist,
-			image: req.file ? `images/${req.file.filename}` : '',
-		});
+albumsRouter.post(
+	'/',
+	auth,
+	imagesUpload.single('image'),
+	async (req, res, next) => {
+		try {
+			const album = new Album({
+				title: req.body.title,
+				year: parseInt(req.body.year),
+				artist: req.body.artist,
+				image: req.file ? `images/${req.file.filename}` : '',
+			});
 
-		await album.save();
-		return res.status(201).send(album);
-	} catch (e) {
-		if (e instanceof mongoose.Error.ValidationError) {
-			return res.status(422).send(e);
+			await album.save();
+			return res.status(201).send(album);
+		} catch (e) {
+			if (e instanceof mongoose.Error.ValidationError) {
+				return res.status(422).send(e);
+			}
+			next(e);
 		}
+	},
+);
+
+albumsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+	try {
+		let albumId;
+		try {
+			albumId = new Types.ObjectId(req.params.id as string);
+		} catch {
+			return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+		}
+
+		const album = await Artist.findOneAndDelete(albumId);
+
+		return res.send({ message: 'Success', artist: album });
+	} catch (e) {
 		next(e);
 	}
 });
