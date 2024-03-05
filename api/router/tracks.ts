@@ -4,6 +4,7 @@ import Track from '../models/tracksSchema';
 import Album from '../models/albumsSchema';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
+import { Roles } from '../models/usersSchema';
 
 const tracksRouter = Router();
 
@@ -35,9 +36,9 @@ tracksRouter.get('/', async (req, res, next) => {
 			const albums = await Album.find({ artist: artistId });
 
 			if (albums) {
-				const test = albums.map((item) => item._id);
+				const albumIdArr = albums.map((item) => item._id);
 				return Promise.all(
-					test.map(async (item) => {
+					albumIdArr.map(async (item) => {
 						return Promise.resolve(Track.find({ album: item }));
 					}),
 				).then((data) => {
@@ -82,20 +83,54 @@ tracksRouter.post('/', auth, async (req, res, next) => {
 	}
 });
 
-tracksRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
-	try {
-		let trackId: Types.ObjectId;
+tracksRouter.delete(
+	'/:id',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
 		try {
-			trackId = new Types.ObjectId(req.params.id as string);
-		} catch {
-			return res.status(404).send({ message: 'Wrong track ObjectId!' });
-		}
+			let trackId: Types.ObjectId;
+			try {
+				trackId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong track ObjectId!' });
+			}
 
-		const track = await Track.findOneAndDelete(trackId);
-		return res.send({ message: 'Success', track });
-	} catch (e) {
-		next(e);
-	}
-});
+			const track = await Track.findOneAndDelete(trackId);
+			return res.send({ message: 'Success', track });
+		} catch (e) {
+			next(e);
+		}
+	},
+);
+
+tracksRouter.patch(
+	'/:id/togglePublished',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
+		try {
+			let trackId;
+			try {
+				trackId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong track ObjectId!' });
+			}
+
+			const oldData = await Track.findById(trackId);
+			if (!oldData) {
+				return res.status(404).send({ message: 'Not found!' });
+			}
+
+			await Track.findByIdAndUpdate(trackId, {
+				isPublished: !oldData.isPublished,
+			});
+
+			return res.send({ message: 'Success' });
+		} catch (e) {
+			next(e);
+		}
+	},
+);
 
 export default tracksRouter;

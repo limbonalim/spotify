@@ -4,6 +4,7 @@ import Artist from '../models/artistsSchema';
 import { imagesUpload } from '../multer';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
+import { Roles } from '../models/usersSchema';
 
 const artistsRouter = Router();
 
@@ -43,21 +44,55 @@ artistsRouter.post(
 	},
 );
 
-artistsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
-	try {
-		let artistId;
+artistsRouter.delete(
+	'/:id',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
 		try {
-			artistId = new Types.ObjectId(req.params.id as string);
-		} catch {
-			return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+			let artistId;
+			try {
+				artistId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+			}
+
+			const artist = await Artist.findOneAndDelete(artistId);
+
+			return res.send({ message: 'Success', artist });
+		} catch (e) {
+			next(e);
 		}
+	},
+);
 
-		const artist = await Artist.findOneAndDelete(artistId);
+artistsRouter.patch(
+	'/:id/togglePublished',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
+		try {
+			let artistId;
+			try {
+				artistId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+			}
 
-		return res.send({ message: 'Success', artist });
-	} catch (e) {
-		next(e);
-	}
-});
+			const oldData = await Artist.findById(artistId);
+			if (!oldData) {
+				return res.status(404).send({ message: 'Not found!' });
+			}
+
+			await Artist.findByIdAndUpdate(artistId, {
+				isPublished: !oldData.isPublished,
+			});
+
+			return res.send({ message: 'Success' });
+		} catch (e) {
+			next(e);
+		}
+	},
+);
 
 export default artistsRouter;

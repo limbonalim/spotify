@@ -4,7 +4,7 @@ import { imagesUpload } from '../multer';
 import Album from '../models/albumsSchema';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
-import Artist from '../models/artistsSchema';
+import { Roles } from '../models/usersSchema';
 
 const albumsRouter = Router();
 
@@ -74,21 +74,55 @@ albumsRouter.post(
 	},
 );
 
-albumsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
-	try {
-		let albumId;
+albumsRouter.delete(
+	'/:id',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
 		try {
-			albumId = new Types.ObjectId(req.params.id as string);
-		} catch {
-			return res.status(404).send({ message: 'Wrong artist ObjectId!' });
+			let albumId;
+			try {
+				albumId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong album ObjectId!' });
+			}
+
+			const album = await Album.findOneAndDelete(albumId);
+
+			return res.send({ message: 'Success', artist: album });
+		} catch (e) {
+			next(e);
 		}
+	},
+);
 
-		const album = await Artist.findOneAndDelete(albumId);
+albumsRouter.patch(
+	'/:id/togglePublished',
+	auth,
+	permit(Roles.admin),
+	async (req, res, next) => {
+		try {
+			let albumId;
+			try {
+				albumId = new Types.ObjectId(req.params.id as string);
+			} catch {
+				return res.status(404).send({ message: 'Wrong album ObjectId!' });
+			}
 
-		return res.send({ message: 'Success', artist: album });
-	} catch (e) {
-		next(e);
-	}
-});
+			const oldData = await Album.findById(albumId);
+			if (!oldData) {
+				return res.status(404).send({ message: 'Not found!' });
+			}
+
+			await Album.findByIdAndUpdate(albumId, {
+				isPublished: !oldData.isPublished,
+			});
+
+			return res.send({ message: 'Success' });
+		} catch (e) {
+			next(e);
+		}
+	},
+);
 
 export default albumsRouter;
