@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks.ts';
-import { logout } from '../../containers/Users/usersSlice.ts';
+import { logout } from '../../containers/Users/usersThunks.ts';
 import type { IUser } from '../../types';
 
 interface Props {
