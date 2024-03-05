@@ -18,7 +18,7 @@ const TrackHistoryPage = () => {
 
   const getRender = useCallback(async () => {
     if (user) {
-      await dispatch(getTrackHistory(user.token)).unwrap();
+      await dispatch(getTrackHistory()).unwrap();
     }
   }, [user]);
 
@@ -30,7 +30,7 @@ const TrackHistoryPage = () => {
   }, [getRender]);
 
   const render = trackHistory.map(({_id, track, datetime}) => (
-    <TrackHistoryItem key={_id} _id={_id} track={track} datetime={datetime}/>
+    <TrackHistoryItem key={_id} track={track} datetime={datetime}/>
   ));
 
   return (

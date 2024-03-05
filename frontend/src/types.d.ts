@@ -53,11 +53,6 @@ export interface IUser {
   token: string;
 }
 
-export interface ITracksHistoryRecord {
-  token: string;
-  track: string;
-}
-
 export interface ITrackHistory {
   _id: string;
   track: ITrackMutation;

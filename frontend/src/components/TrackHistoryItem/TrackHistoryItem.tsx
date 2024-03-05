@@ -3,7 +3,9 @@ import { Box, Grid, Typography } from '@mui/material';
 import FormatDate from '../UI/FormatDate/FormatDate.ts';
 import type { ITrackHistory } from '../../types';
 
-const memoTrackHistoryItem: React.FC<ITrackHistory> = memo(function TrackHistoryItem({_id, track, datetime}) {
+type Props = Omit<ITrackHistory, '_id'>;
+
+const memoTrackHistoryItem: React.FC<Props> = memo(function TrackHistoryItem({track, datetime}) {
   return (
     <Grid item>
       <Box sx={{display: 'flex', gap: 2, alignItems: 'center', borderBottom: '1px solid gray'}}>
