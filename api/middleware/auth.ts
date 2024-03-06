@@ -17,12 +17,12 @@ const auth = async (
 	const [_bearer, token] = headerValue ? headerValue.split(' ') : '';
 
 	if (!token) {
-		return res.status(401).send({ error: 'No token present' });
+		return res.status(401).send({ message: 'No token present' });
 	}
 	const user = await User.findOne({ token });
 
 	if (!user) {
-		return res.status(401).send({ error: 'Wrong token' });
+		return res.status(401).send({ message: 'Wrong token' });
 	}
 
 	req.user = user;
