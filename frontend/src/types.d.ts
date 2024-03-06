@@ -74,5 +74,9 @@ interface ITrackMutation {
   duration: string;
 }
 
-
+export interface IArtistFormState {
+  name: string;
+  info: string;
+  photo: File | null;
+}
 

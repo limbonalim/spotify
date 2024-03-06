@@ -30,6 +30,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
       <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={onClose} keepMounted>
         <MenuItem onClick={() => dispatch(logout())}>LogOut</MenuItem>
         <MenuItem onClick={() => navigate('/tracks_history')}>Track History</MenuItem>
+        <MenuItem onClick={() => navigate('/create_artist')}>Create Artist</MenuItem>
       </Menu>
     </>
   );
