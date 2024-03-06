@@ -80,3 +80,10 @@ export interface IArtistFormState {
   photo: File | null;
 }
 
+export interface IAlbumFormState {
+  title: string;
+  year: string;
+  artist: string;
+  image: File | null;
+}
+

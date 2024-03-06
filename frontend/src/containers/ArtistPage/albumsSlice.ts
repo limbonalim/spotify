@@ -1,13 +1,15 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {getAlbums} from './albumsThunks.ts';
+import { createAlbum, getAlbums } from './albumsThunks.ts';
 import {RootState} from '../../app/store.ts';
-import type {IAlbum, IMyError} from '../../types';
+import type { IAlbum, IMyError, ValidationError } from '../../types';
 
 interface AlbumState {
   albums: IAlbum[];
   currentAlbum: IAlbum | null;
   isLoading: boolean;
   errorMessage: IMyError | undefined;
+  isCreateLoading: boolean;
+  createError: ValidationError | null
 }
 
 const initialState: AlbumState = {
@@ -15,6 +17,8 @@ const initialState: AlbumState = {
   currentAlbum: null,
   isLoading: false,
   errorMessage: undefined,
+  isCreateLoading: false,
+  createError: null,
 };
 
 const albumsSlice = createSlice({
@@ -42,6 +46,16 @@ const albumsSlice = createSlice({
       state.isLoading = false;
       state.errorMessage = error;
     });
+
+    builder.addCase(createAlbum.pending, (state) => {
+      state.isCreateLoading = true;
+      state.createError = null;
+    }).addCase(createAlbum.fulfilled, (state) => {
+      state.isCreateLoading = false;
+    }).addCase(createAlbum.rejected, (state, {payload: error}) => {
+      state.isCreateLoading = false;
+      state.createError = error || null;
+    });
   }
 });
 
@@ -49,6 +63,8 @@ export const selectAlbums = (state: RootState) => state.albums.albums;
 export const selectIsLoading = (state: RootState) => state.albums.isLoading;
 export const selectCurrentAlbum = (state: RootState) => state.albums.currentAlbum;
 export const selectErrorMessage = (state: RootState) => state.albums.errorMessage;
+export const selectIsCreateLoading = (state: RootState) => state.albums.isCreateLoading;
+export const selectCreateError = (state: RootState) => state.albums.createError;
 
 export const albumReducer = albumsSlice.reducer;
 
