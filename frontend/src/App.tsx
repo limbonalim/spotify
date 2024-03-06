@@ -10,6 +10,7 @@ import TrackHistoryPage from './containers/TrackHistoryPage/TrackHistoryPage.tsx
 import Player from './components/UI/Player/Player.tsx';
 import ArtistForm from './containers/Home/ArtistForm.tsx';
 import AlbumForm from './containers/ArtistPage/AlbumForm.tsx';
+import TrackForm from './containers/AlbumPage/TrackForm.tsx';
 import { useAppSelector } from './app/hooks.ts';
 import { selectCurrentTrack } from './containers/AlbumPage/tracksSlice.ts';
 
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/login" element={(<Login/>)}/>
           <Route path="/create_artist" element={(<ArtistForm/>)}/>
           <Route path="/create_album" element={(<AlbumForm/>)}/>
+          <Route path="/create_track" element={(<TrackForm/>)}/>
           <Route path="/tracks_history" element={(<TrackHistoryPage/>)}/>
           <Route path="/albums/:id" element={(<ArtistPage/>)}/>
           <Route path="/tracks/:artistId/:id" element={(<AlbumPage/>)}/>

@@ -32,6 +32,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
         <MenuItem onClick={() => navigate('/tracks_history')}>Track History</MenuItem>
         <MenuItem onClick={() => navigate('/create_artist')}>Create Artist</MenuItem>
         <MenuItem onClick={() => navigate('/create_album')}>Create Album</MenuItem>
+        <MenuItem onClick={() => navigate('/create_track')}>Create Track</MenuItem>
       </Menu>
     </>
   );
