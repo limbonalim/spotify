@@ -75,7 +75,7 @@ const ArtistForm = () => {
             <FileInput
               onChange={handleImageChange}
               label="Image"
-              name="image"
+              name="photo"
             />
           </Grid>
         </Grid>
