@@ -65,10 +65,17 @@ tracksRouter.get('/', async (req, res, next) => {
 
 tracksRouter.post('/', auth, async (req, res, next) => {
 	try {
+		let numberInAlbum = 1;
+		const tracksInAlbum = await Track.find({ album: req.body.album });
+
+		if (tracksInAlbum.length > 0) {
+			numberInAlbum = tracksInAlbum.length + 1;
+		}
+
 		const track = new Track({
 			title: req.body.title,
 			album: req.body.album,
-			numberInAlbum: parseInt(req.body.numberInAlbum),
+			numberInAlbum,
 			url: req.body.url,
 			duration: req.body.duration,
 		});
