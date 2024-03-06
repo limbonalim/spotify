@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Alert, Grid } from '@mui/material';
 import { useEffect } from 'react';
 import ArtistItem from '../../components/ArtistItem/ArtistItem.tsx';
 import Loader from '../../components/UI/Loader/Loader.tsx';
@@ -22,7 +22,11 @@ const Home = () => {
   ));
   return (
     <Grid container spacing={2}>
-      {error ? <span>{error.message}</span> : ''}
+      {error && (
+        <Alert severity="error" sx={{mb: 3}}>
+          {error.message}
+        </Alert>
+      )}
       {isLoading ? <Loader/> : render}
     </Grid>
   );
