@@ -29,6 +29,7 @@ export interface ITrackFields {
 	url?: string;
 	duration: string;
 	isPublished: boolean;
+	creator: Schema.Types.ObjectId;
 }
 
 export type ITrackModel = Model<ITrackFields, unknown, unknown>;
@@ -38,6 +39,7 @@ export interface IArtistFields {
 	photo?: string;
 	info?: string;
 	isPublished: boolean;
+	creator: Schema.Types.ObjectId;
 }
 
 export type IArtistModel = Model<IArtistFields, unknown, unknown>;
@@ -48,6 +50,7 @@ export interface IAlbumsFields {
 	artist: Schema.Types.ObjectId;
 	image?: string;
 	isPublished: boolean;
+	creator: Schema.Types.ObjectId;
 }
 
 export type IAlbumsModel = Model<IAlbumsFields, unknown, unknown>;

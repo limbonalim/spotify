@@ -5,22 +5,44 @@ import Album from '../models/albumsSchema';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
 import { Roles } from '../models/usersSchema';
+import check, { RequestWithUser } from '../middleware/check';
 
 const tracksRouter = Router();
 
-tracksRouter.get('/', async (req, res, next) => {
+tracksRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 	try {
+		const user = req.user;
+
 		if (req.query.album) {
 			let albumId: Types.ObjectId;
+			let result;
 			try {
 				albumId = new Types.ObjectId(req.query.album as string);
 			} catch {
 				return res.status(404).send({ message: 'Wrong album ObjectId!' });
 			}
 
-			const result = await Track.find({ album: albumId }, null, {
-				sort: { numberInAlbum: 1 },
-			});
+			if (user) {
+				result = await Track.find({ album: albumId, isPublished: true }, null, {
+					sort: { numberInAlbum: 1 },
+				});
+
+				const userPosts = await Track.find(
+					{ album: albumId, creator: user._id },
+					null,
+					{
+						sort: { numberInAlbum: 1 },
+					},
+				);
+
+				result = [...result, ...userPosts].sort(
+					(a, b) => b.numberInAlbum - a.numberInAlbum,
+				);
+			} else {
+				result = await Track.find({ album: albumId, isPublished: true }, null, {
+					sort: { numberInAlbum: 1 },
+				});
+			}
 
 			if (!result[0]) {
 				return res.status(404).send({ message: 'Not found' });
@@ -33,13 +55,15 @@ tracksRouter.get('/', async (req, res, next) => {
 			} catch {
 				return res.status(404).send({ message: 'Wrong artist ObjectId!' });
 			}
-			const albums = await Album.find({ artist: artistId });
+			const albums = await Album.find({ artist: artistId, isPublished: true });
 
 			if (albums) {
 				const albumIdArr = albums.map((item) => item._id);
 				return Promise.all(
 					albumIdArr.map(async (item) => {
-						return Promise.resolve(Track.find({ album: item }));
+						return Promise.resolve(
+							Track.find({ album: item, isPublished: true }),
+						);
 					}),
 				).then((data) => {
 					data.forEach((item) => [...item]);
@@ -48,23 +72,15 @@ tracksRouter.get('/', async (req, res, next) => {
 			}
 
 			return res.status(404).send({ message: 'Not found!' });
-		} else {
-			const result = await Track.find({}, null, {
-				sort: { numberInAlbum: 1 },
-			});
-
-			if (!result[0]) {
-				return res.status(404).send({ message: 'Not found' });
-			}
-			return res.send(result);
 		}
 	} catch (e) {
 		next(e);
 	}
 });
 
-tracksRouter.post('/', auth, async (req, res, next) => {
+tracksRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
 	try {
+		const user = req.user;
 		let numberInAlbum = 1;
 		const tracksInAlbum = await Track.find({ album: req.body.album });
 
@@ -78,6 +94,7 @@ tracksRouter.post('/', auth, async (req, res, next) => {
 			numberInAlbum,
 			url: req.body.url,
 			duration: req.body.duration,
+			creator: user?._id,
 		});
 		await track.save();
 

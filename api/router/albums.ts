@@ -2,30 +2,54 @@ import { Router } from 'express';
 import mongoose, { Types } from 'mongoose';
 import { imagesUpload } from '../multer';
 import Album from '../models/albumsSchema';
-import auth from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
 import { Roles } from '../models/usersSchema';
+import check from '../middleware/check';
 
 const albumsRouter = Router();
 
-albumsRouter.get('/', async (req, res, next) => {
+albumsRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 	try {
+		const user = req.user;
 		if (req.query.artist) {
 			let artistId: Types.ObjectId;
+			let result;
 			try {
 				artistId = new Types.ObjectId(req.query.artist as string);
 			} catch {
 				return res.status(404).send({ message: 'Wrong ObjectId!' });
 			}
 
-			const result = await Album.find({ artist: artistId }, null, {
-				sort: { year: -1 },
-			});
+			if (user) {
+				result = await Album.find(
+					{ artist: artistId, isPublished: true },
+					null,
+					{
+						sort: { year: -1 },
+					},
+				);
+				const userPosts = await Album.find(
+					{ artist: artistId, creator: user._id },
+					null,
+					{
+						sort: { year: -1 },
+					},
+				);
+
+				result = [...result, ...userPosts].sort((a, b) => b.year - a.year);
+			} else {
+				result = await Album.find(
+					{ artist: artistId, isPublished: true },
+					null,
+					{
+						sort: { year: -1 },
+					},
+				);
+			}
+
 			return res.send(result);
 		}
-
-		const result = await Album.find();
-		return res.send(result);
 	} catch (e) {
 		next(e);
 	}
@@ -54,13 +78,16 @@ albumsRouter.post(
 	'/',
 	auth,
 	imagesUpload.single('image'),
-	async (req, res, next) => {
+	async (req: RequestWithUser, res, next) => {
+		const user = req.user;
+
 		try {
 			const album = new Album({
 				title: req.body.title,
 				year: parseInt(req.body.year),
 				artist: req.body.artist,
 				image: req.file ? `images/${req.file.filename}` : '',
+				creator: user?._id,
 			});
 
 			await album.save();

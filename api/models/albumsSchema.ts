@@ -1,6 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import Artist from './artistsSchema';
 import type { IAlbumsFields, IAlbumsModel } from '../types';
+import User from './usersSchema';
 
 const albumsSchema = new Schema<IAlbumsFields, IAlbumsModel, unknown>({
 	title: {
@@ -28,7 +29,19 @@ const albumsSchema = new Schema<IAlbumsFields, IAlbumsModel, unknown>({
 		type: Boolean,
 		required: true,
 		default: false,
-	}
+	},
+	creator: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: 'users',
+		validate: {
+			validator: async (userId: Schema.Types.ObjectId) => {
+				const user = await User.findById(userId);
+				return Boolean(user);
+			},
+			message: 'User is not found!',
+		},
+	},
 });
 
 const Album = model<IAlbumsFields, IAlbumsModel>('albums', albumsSchema);

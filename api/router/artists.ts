@@ -2,15 +2,25 @@ import { Router } from 'express';
 import mongoose, { Types } from 'mongoose';
 import Artist from '../models/artistsSchema';
 import { imagesUpload } from '../multer';
-import auth from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
-import { Roles } from '../models/usersSchema';
+import User, { Roles } from '../models/usersSchema';
+import check from '../middleware/check';
 
 const artistsRouter = Router();
 
-artistsRouter.get('/', async (req, res, next) => {
+artistsRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 	try {
-		const result = await Artist.find();
+		const user = req.user;
+		let result;
+
+		if (user) {
+			result = await Artist.find({ isPublished: true });
+			const userPosts = await Artist.find({ creator: user._id });
+			result = [...userPosts, ...result];
+		} else {
+			result = await Artist.find({ isPublished: true });
+		}
 
 		if (!result[0]) {
 			return res.status(404).send({ message: 'Not found' });
@@ -25,12 +35,15 @@ artistsRouter.post(
 	'/',
 	auth,
 	imagesUpload.single('photo'),
-	async (req, res, next) => {
+	async (req: RequestWithUser, res, next) => {
+		const user = req.user;
+
 		try {
 			const artist = new Artist({
 				name: req.body.name,
 				photo: req.file ? `images/${req.file.filename}` : '',
 				info: req.body.info,
+				creator: user?._id,
 			});
 
 			await artist.save();
