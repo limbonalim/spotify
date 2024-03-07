@@ -28,7 +28,7 @@ tracksRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 				});
 
 				const userPosts = await Track.find(
-					{ album: albumId, creator: user._id },
+					{ album: albumId, creator: user._id, isPublished: false },
 					null,
 					{
 						sort: { numberInAlbum: 1 },

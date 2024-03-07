@@ -16,7 +16,10 @@ artistsRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 
 		if (user) {
 			result = await Artist.find({ isPublished: true });
-			const userPosts = await Artist.find({ creator: user._id });
+			const userPosts = await Artist.find({
+				creator: user._id,
+				isPublished: false,
+			});
 			result = [...userPosts, ...result];
 		} else {
 			result = await Artist.find({ isPublished: true });

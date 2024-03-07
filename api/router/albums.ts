@@ -30,7 +30,7 @@ albumsRouter.get('/', check, async (req: RequestWithUser, res, next) => {
 					},
 				);
 				const userPosts = await Album.find(
-					{ artist: artistId, creator: user._id },
+					{ artist: artistId, creator: user._id, isPublished: false },
 					null,
 					{
 						sort: { year: -1 },
