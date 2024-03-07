@@ -6,6 +6,7 @@ import { albumReducer } from '../containers/ArtistPage/albumsSlice.ts';
 import { tracksReducer } from '../containers/AlbumPage/tracksSlice.ts';
 import { usersReducers } from '../containers/Users/usersSlice.ts';
 import { tracksHistoryReducers } from '../containers/TrackHistoryPage/tracksHistorySlice.ts';
+import { adminsReducer } from '../containers/AdminPage/adminsSlice.ts';
 
 const usersPersistConfig = {
 	key: 'spotify:users',
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 	albums: albumReducer,
 	tracks: tracksReducer,
 	trackHistory: tracksHistoryReducers,
+  admins: adminsReducer,
 	users: persistReducer(usersPersistConfig, usersReducers)
 });
 

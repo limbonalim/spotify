@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { logout } from '../../containers/Users/usersThunks.ts';
 import type { IUser } from '../../types';
+import { Roles } from '../../constants.ts';
 
 interface Props {
   user: IUser;
@@ -33,6 +34,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
         <MenuItem onClick={() => navigate('/create_artist')}>Create Artist</MenuItem>
         <MenuItem onClick={() => navigate('/create_album')}>Create Album</MenuItem>
         <MenuItem onClick={() => navigate('/create_track')}>Create Track</MenuItem>
+        {user.role === Roles.admin && <MenuItem onClick={() => navigate('/admin')}>Admin Page</MenuItem>}
       </Menu>
     </>
   );

@@ -4,15 +4,58 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectUser } from '../../containers/Users/usersSlice.ts';
 import { createNewRecord } from '../../containers/TrackHistoryPage/tracksHistoryThunks.ts';
-import { getCurrentTrack } from "../../containers/AlbumPage/tracksSlice.ts";
+import { getCurrentTrack } from '../../containers/AlbumPage/tracksSlice.ts';
+import {
+  clearCurrent,
+  getCurrent,
+  selectCurrent, selectIsDeleteTrackLoading, selectIsPublicateTrackLoading
+} from '../../containers/AdminPage/adminsSlice.ts';
+import {
+  deleteTrack,
+  getAdminData,
+  publicateTrack
+} from '../../containers/AdminPage/adminsThunks.ts';
 import type { ITrack } from '../../types';
 
-type Props = Omit<ITrack, 'album'>
+type PropsMutation = Omit<ITrack, 'album'>
 
-const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration, numberInAlbum, url}) {
-  const user = useAppSelector(selectUser);
+interface Props extends PropsMutation {
+  isAdmin?: boolean;
+}
+
+const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration, numberInAlbum, url, isAdmin}) {
   const dispatch = useAppDispatch();
+  const currentId = useAppSelector(selectCurrent);
+  const isPublicateLoading = useAppSelector(selectIsPublicateTrackLoading);
+  const isDeleteLoading = useAppSelector(selectIsDeleteTrackLoading);
+  const user = useAppSelector(selectUser);
   let playButton;
+  let buttons;
+
+  const handlePublicete = async () => {
+    dispatch(getCurrent(_id));
+    await dispatch(publicateTrack(_id)).unwrap();
+    dispatch(clearCurrent());
+    await dispatch(getAdminData()).unwrap();
+  };
+
+  const handleDelete = async () => {
+    dispatch(getCurrent(_id));
+    await dispatch(deleteTrack(_id)).unwrap();
+    dispatch(clearCurrent());
+    await dispatch(getAdminData()).unwrap();
+  };
+
+  if (isAdmin) {
+    buttons = (
+      <Box sx={{display: 'flex', gap: 1}}>
+        <Button disabled={currentId === _id ? isPublicateLoading : false} size="small" variant="contained"
+                       onClick={handlePublicete}>Publicate</Button>
+        <Button disabled={currentId === _id ? isDeleteLoading : false} size="small" variant="contained"
+                       color="error" onClick={handleDelete}>Delete</Button>
+      </Box>
+    );
+  }
 
   const onClick = async () => {
     if (user) {
@@ -26,8 +69,8 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
   if (user) {
     playButton = (
       <Button onClick={onClick} variant="outlined" startIcon={<PlayCircleOutlineIcon/>}>
-      Play
-    </Button>
+        Play
+      </Button>
     );
   }
 
@@ -38,8 +81,10 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
         {playButton}
         <Typography variant="h5">
           {title}
+          {isAdmin && <Typography>Not published!</Typography> }
         </Typography>
         <Typography color="gray">{duration}</Typography>
+        {buttons}
       </Box>
     </Grid>
   );

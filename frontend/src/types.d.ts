@@ -50,6 +50,7 @@ export interface ILoginForm {
 export interface IUser {
   _id: string;
   username: string;
+  role: string;
   token: string;
 }
 
@@ -87,3 +88,8 @@ export interface IAlbumFormState {
   image: File | null;
 }
 
+export interface IAdminData {
+  artists: IArtist[],
+  albums: IAlbum[],
+  tracks: ITrack[]
+}
