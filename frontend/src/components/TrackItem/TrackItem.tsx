@@ -16,6 +16,8 @@ import {
   publicateTrack
 } from '../../containers/AdminPage/adminsThunks.ts';
 import type { ITrack } from '../../types';
+import { getTracks } from '../../containers/AlbumPage/tracksThunks.ts';
+import { selectCurrentAlbum } from '../../containers/ArtistPage/albumsSlice.ts';
 
 type PropsMutation = Omit<ITrack, 'album'>
 
@@ -23,12 +25,13 @@ interface Props extends PropsMutation {
   isAdmin?: boolean;
 }
 
-const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration, numberInAlbum, url, isAdmin}) {
+const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration, numberInAlbum, url, isAdmin, isPublished}) {
   const dispatch = useAppDispatch();
   const currentId = useAppSelector(selectCurrent);
   const isPublicateLoading = useAppSelector(selectIsPublicateTrackLoading);
   const isDeleteLoading = useAppSelector(selectIsDeleteTrackLoading);
   const user = useAppSelector(selectUser);
+  const album = useAppSelector(selectCurrentAlbum);
   let playButton;
   let buttons;
 
@@ -37,6 +40,9 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
     await dispatch(publicateTrack(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    if (album) {
+      await dispatch(getTracks(album._id)).unwrap();
+    }
   };
 
   const handleDelete = async () => {
@@ -44,6 +50,9 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
     await dispatch(deleteTrack(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    if (album) {
+      await dispatch(getTracks(album._id)).unwrap();
+    }
   };
 
   if (isAdmin) {
@@ -81,7 +90,7 @@ const TrackItem: React.FC<Props> = memo(function TrackItem({_id, title, duration
         {playButton}
         <Typography variant="h5">
           {title}
-          {isAdmin && <Typography>Not published!</Typography> }
+          {!isPublished && <Typography>Not published!</Typography> }
         </Typography>
         <Typography color="gray">{duration}</Typography>
         {buttons}

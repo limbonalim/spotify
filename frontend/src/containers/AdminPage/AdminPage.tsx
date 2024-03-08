@@ -66,15 +66,15 @@ const AdminPage = () => {
     void getContent();
   }, [getContent]);
 
-  const renderArtists = artists.map(({_id, name, photo}) => (
-    <ArtistItem key={`admin/${_id}`} _id={_id} name={name} photo={photo} isAdmin/>
+  const renderArtists = artists.map(({_id, name, photo, isPublished}) => (
+    <ArtistItem key={`admin/${_id}`} _id={_id} name={name} photo={photo} isPublished={isPublished} isAdmin/>
   ));
 
-  const renderAlbums = albums.map(({_id, title, image, year}) => (
-    <AlbumItem key={`admin/${_id}`} _id={_id} title={title} year={year} image={image} isAdmin/>));
+  const renderAlbums = albums.map(({_id, title, image, year, isPublished}) => (
+    <AlbumItem key={`admin/${_id}`} _id={_id} title={title} year={year} image={image} isPublished={isPublished} isAdmin/>));
 
-  const renderTracks = tracks.map(({_id, title, duration, numberInAlbum, url}) => (
-    <TrackItem key={`admin/${_id}`} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url} isAdmin/>
+  const renderTracks = tracks.map(({_id, title, duration, numberInAlbum, url, isPublished}) => (
+    <TrackItem key={`admin/${_id}`} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url} isPublished={isPublished} isAdmin/>
   ));
 
   const render =  (

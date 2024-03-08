@@ -6,15 +6,17 @@ import {getArtist, selectCurrentArtist} from '../Home/artistsSlice.ts';
 import {getArtists} from '../Home/artistsThunks.ts';
 import {selectAlbums, selectErrorMessage, selectIsLoading} from './albumsSlice.ts';
 import {getAlbums} from './albumsThunks.ts';
-import {BASE_URL} from '../../constants.ts';
+import {BASE_URL, Roles} from '../../constants.ts';
 import AlbumItem from '../../components/AlbumItem/AlbumItem.tsx';
 import Loader from '../../components/UI/Loader/Loader.tsx';
 import noImage from '../../assets/NoImage.png';
+import {selectUser} from "../Users/usersSlice.ts";
 
 
 const ArtistPage = () => {
   const dispatch = useAppDispatch();
   const artist = useAppSelector(selectCurrentArtist);
+  const user = useAppSelector(selectUser);
   const albums = useAppSelector(selectAlbums);
   const error = useAppSelector(selectErrorMessage);
   const isLoading = useAppSelector(selectIsLoading);
@@ -32,8 +34,12 @@ const ArtistPage = () => {
     void renderArtist();
   }, [renderArtist]);
 
-  const render = albums.map(({_id, title, image, year}) => (
-    <AlbumItem key={_id} _id={_id} title={title} year={year} image={image}/>));
+  const render = albums.map(({_id, title, image, year, isPublished}) => {
+    if (user && user.role === Roles.admin) {
+      return (<AlbumItem key={_id} _id={_id} title={title} year={year} image={image} isPublished={isPublished} isAdmin/>);
+    }
+    return (<AlbumItem key={_id} _id={_id} title={title} year={year} image={image} isPublished={isPublished}/>);
+  });
 
   return artist && (
     <Grid container>

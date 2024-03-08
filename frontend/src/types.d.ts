@@ -3,6 +3,7 @@ export interface IArtist {
   name: string;
   photo?: string;
   info?: string;
+  isPublished: boolean;
 }
 
 export interface IMyError {
@@ -14,6 +15,7 @@ export interface IAlbum {
   title: string;
   year: number;
   image?: string;
+  isPublished: boolean;
 }
 
 export interface ITrack {
@@ -23,6 +25,7 @@ export interface ITrack {
   numberInAlbum: number;
   url?: string;
   duration: string;
+  isPublished: boolean;
 }
 
 export interface ValidationError {

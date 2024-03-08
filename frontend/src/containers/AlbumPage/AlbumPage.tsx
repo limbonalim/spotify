@@ -11,10 +11,13 @@ import { getTracks } from './tracksThunks.ts';
 import { getCurrentAlbum, selectCurrentAlbum } from '../ArtistPage/albumsSlice.ts';
 import { selectErrorMessage, selectIsLoading, selectTracks } from './tracksSlice.ts';
 import { selectRecordErrorMessage } from '../TrackHistoryPage/tracksHistorySlice.ts';
+import {selectUser} from "../Users/usersSlice.ts";
+import {Roles} from "../../constants.ts";
 
 
 const AlbumPage = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const artist = useAppSelector(selectCurrentArtist);
   const album = useAppSelector(selectCurrentAlbum);
   const error = useAppSelector(selectErrorMessage);
@@ -37,9 +40,12 @@ const AlbumPage = () => {
     void renderAlbum();
   }, [renderAlbum]);
 
-  const render = tracks.map(({_id, title, duration, numberInAlbum, url}) => (
-    <TrackItem key={_id} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url}/>
-  ));
+  const render = tracks.map(({_id, title, duration, numberInAlbum, url, isPublished}) => {
+    if (user && user.role === Roles.admin) {
+      return (<TrackItem key={_id} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url} isPublished={isPublished} isAdmin/>);
+    }
+    return (<TrackItem key={_id} _id={_id} title={title} duration={duration} numberInAlbum={numberInAlbum} url={url} isPublished={isPublished}/>);
+});
 
   return (artist && album) && (
     <Grid container>

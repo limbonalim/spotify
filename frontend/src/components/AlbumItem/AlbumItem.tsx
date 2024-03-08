@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Button, Grid, Link, Typography } from '@mui/material';
+import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { BASE_URL } from '../../constants.ts';
 import noImage from '../../assets/NoImage.png';
@@ -15,13 +15,14 @@ import {
   getAdminData,
   publicateAlbum,
 } from '../../containers/AdminPage/adminsThunks.ts';
+import {getAlbums} from "../../containers/ArtistPage/albumsThunks.ts";
 import type { IAlbum } from '../../types';
 
 interface Props extends IAlbum {
   isAdmin?: boolean;
 }
 
-const AlbumItem: React.FC<Props> = memo(function AlbumItem({_id, year, title, image, isAdmin}) {
+const AlbumItem: React.FC<Props> = memo(function AlbumItem({_id, year, title, image, isAdmin, isPublished}) {
   const dispatch = useAppDispatch();
   const currentId = useAppSelector(selectCurrent);
   const isPublicateLoading = useAppSelector(selectIsPublicateAlbumLoading);
@@ -35,6 +36,9 @@ const AlbumItem: React.FC<Props> = memo(function AlbumItem({_id, year, title, im
     await dispatch(publicateAlbum(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    if (artist) {
+      await dispatch(getAlbums(artist._id));
+    }
   };
 
   const handleDelete = async () => {
@@ -42,22 +46,25 @@ const AlbumItem: React.FC<Props> = memo(function AlbumItem({_id, year, title, im
     await dispatch(deleteAlbum(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    if (artist) {
+      await dispatch(getAlbums(artist._id));
+    }
   };
 
   if (isAdmin) {
     buttons = (
-      <Grid item container sx={{display: 'flex', gap: 1}} mt={2}>
+      <Box sx={{display: 'flex', gap: 1, marginY: 2}}>
         <Button disabled={currentId === _id ? isPublicateLoading : false} size="small" variant="contained"
                        onClick={handlePublicete}>Publicate</Button>
         <Button disabled={currentId === _id ? isDeleteLoading : false} size="small" variant="contained"
                        color="error" onClick={handleDelete}>Delete</Button>
-      </Grid>
+      </Box>
     );
   }
 
   return (
     <Grid item>
-      <Link to={path} component={isAdmin? 'div' : RouterLink} sx={{textDecoration: 'none', color: 'inherit'}}>
+      <Link to={path} component={RouterLink} sx={{textDecoration: 'none', color: 'inherit'}}>
         <Grid item container>
           <Grid item container spacing={2}>
             <Grid item>
@@ -69,15 +76,15 @@ const AlbumItem: React.FC<Props> = memo(function AlbumItem({_id, year, title, im
             </Grid>
             <Grid item>
               <Typography variant="h5">{title}</Typography>
-              {isAdmin && <Typography>Not published!</Typography> }
+              {!isPublished && <Typography>Not published!</Typography> }
             </Grid>
           </Grid>
           <Grid item>
             <Typography>{year}</Typography>
           </Grid>
-          {buttons}
         </Grid>
       </Link>
+      {buttons}
     </Grid>
   );
 });

@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActions, Grid, Link } from '@mui/material';
+import { Button, Grid, Link } from '@mui/material';
 import noImage from '../../assets/NoImage.png';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { deleteArtist, getAdminData, publicateArtist } from '../../containers/AdminPage/adminsThunks.ts';
@@ -15,13 +15,15 @@ import {
   selectIsPublicateArtistLoading
 } from '../../containers/AdminPage/adminsSlice.ts';
 import { BASE_URL } from '../../constants.ts';
+import {getArtists} from "../../containers/Home/artistsThunks.ts";
 import type { IArtist } from '../../types';
+import Box from "@mui/material/Box";
 
 interface Props extends IArtist {
   isAdmin?: boolean;
 }
 
-const memoArtistItem: React.FC<Props> = memo(function ArtistItem({_id, name, photo, isAdmin}) {
+const memoArtistItem: React.FC<Props> = memo(function ArtistItem({_id, name, photo, isAdmin, isPublished}) {
   const dispatch = useAppDispatch();
   const isPublicateLoading = useAppSelector(selectIsPublicateArtistLoading);
   const isDeleteLoading = useAppSelector(selectIsDeleteArtistLoading);
@@ -35,6 +37,7 @@ const memoArtistItem: React.FC<Props> = memo(function ArtistItem({_id, name, pho
     await dispatch(publicateArtist(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    await dispatch(getArtists()).unwrap();
   };
 
   const handleDelete = async () => {
@@ -42,20 +45,21 @@ const memoArtistItem: React.FC<Props> = memo(function ArtistItem({_id, name, pho
     await dispatch(deleteArtist(_id)).unwrap();
     dispatch(clearCurrent());
     await dispatch(getAdminData()).unwrap();
+    await dispatch(getArtists()).unwrap();
   };
 
   if (isAdmin) {
     buttons = (
-      <CardActions>
+      <Box sx={{display: 'flex', gap: 2, mt: 1}}>
         <Button disabled={currentId === _id? isPublicateLoading : false} size="small" variant="contained" onClick={handlePublicete}>Publicate</Button>
         <Button disabled={currentId === _id? isDeleteLoading : false} size="small" variant="contained" color="error" onClick={handleDelete}>Delete</Button>
-      </CardActions>
+      </Box>
     );
   }
 
   return (
     <Grid item>
-      <Link to={path} component={isAdmin? 'div' : RouterLink} sx={{textDecoration: 'none'}}>
+      <Link to={path} component={RouterLink} sx={{textDecoration: 'none'}}>
         <Card sx={{maxWidth: 345}}>
             <CardMedia
               component="img"
@@ -66,12 +70,12 @@ const memoArtistItem: React.FC<Props> = memo(function ArtistItem({_id, name, pho
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 {name}
-                {isAdmin && <Typography>Not published!</Typography> }
+                {!isPublished && <Typography>Not published!</Typography> }
               </Typography>
             </CardContent>
-            {buttons}
         </Card>
       </Link>
+      {buttons}
     </Grid>
   );
 });
