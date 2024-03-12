@@ -56,7 +56,7 @@ const AdminPage = () => {
         setComponentError(errors[key]);
       }
     });
-  }, [dispatch, errors.deleteArtistError, errors.deleteAlbumError, errors.deleteTrackError, errors.publicatedArtistError, errors.publicatedAlbumError, errors.publicatedTrackError]);
+  }, [dispatch,errors, errors.deleteArtistError, errors.deleteAlbumError, errors.deleteTrackError, errors.publicatedArtistError, errors.publicatedAlbumError, errors.publicatedTrackError]);
 
   const getContent = useCallback(async () => {
     await dispatch(getAdminData()).unwrap();

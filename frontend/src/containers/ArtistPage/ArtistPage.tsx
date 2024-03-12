@@ -28,7 +28,7 @@ const ArtistPage = () => {
       dispatch(getArtist(id));
       await dispatch(getAlbums(id));
     }
-  },[id]);
+  },[id, dispatch]);
 
   useEffect(() => {
     void renderArtist();

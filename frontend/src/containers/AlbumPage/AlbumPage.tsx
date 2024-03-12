@@ -38,7 +38,7 @@ const AlbumPage = () => {
 
   useEffect(() => {
     void renderAlbum();
-  }, [renderAlbum]);
+  }, [renderAlbum, dispatch]);
 
   const render = tracks.map(({_id, title, duration, numberInAlbum, url, isPublished}) => {
     if (user && user.role === Roles.admin) {
