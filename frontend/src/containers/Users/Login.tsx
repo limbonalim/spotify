@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Container, Grid, Link, TextField, Typography, Box, Alert } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import type { ILoginForm } from '../../types';
 import { selectIsLoginLoading, selectLoginError } from './usersSlice.ts';
 import { login } from './usersThunks.ts';
+import type { ILoginForm } from '../../types';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -53,6 +54,16 @@ const Login = () => {
             {error.message}
           </Alert>
         )}
+        <Box sx={{py: 2}}>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('error');
+            }}
+          ></GoogleLogin>
+        </Box>
         <Box component="form" noValidate onSubmit={onSubmit} sx={{mt: 3}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
