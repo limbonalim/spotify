@@ -14,8 +14,9 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState<IRegisterForm>({
-    username: '',
-    password: ''
+    email: '',
+    password: '',
+    displayName: '',
   });
 
   const getFieldError = (fieldName: string) => {
@@ -63,13 +64,24 @@ const Register = () => {
               <TextField
                 sx={{width: '100%'}}
                 required
-                label="Username"
-                name="username"
-                value={state.username}
+                label="Email"
+                name="email"
+                type="email"
+                value={state.email}
                 onChange={onChange}
                 error={Boolean(getFieldError('username'))}
                 helperText={getFieldError('username')}
                 autoComplete="new-username"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                sx={{width: '100%'}}
+                required
+                name="displayName"
+                label="Name"
+                value={state.displayName}
+                onChange={onChange}
               />
             </Grid>
             <Grid item xs={12}>

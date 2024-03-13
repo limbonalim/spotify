@@ -41,18 +41,21 @@ export interface ValidationError {
 }
 
 export interface IRegisterForm {
-  username: string;
+  email: string;
   password: string;
+  displayName: string;
 }
 
 export interface ILoginForm {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface IUser {
   _id: string;
-  username: string;
+  email: string;
+  displayName: string;
+  avatar?: string;
   role: string;
   token: string;
 }
