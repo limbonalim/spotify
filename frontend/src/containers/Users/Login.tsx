@@ -5,7 +5,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectIsLoginLoading, selectLoginError } from './usersSlice.ts';
-import { login } from './usersThunks.ts';
+import { googleLogin, login } from './usersThunks.ts';
 import type { ILoginForm } from '../../types';
 
 const Login = () => {
@@ -15,7 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState<ILoginForm>({
-    username: '',
+    email: '',
     password: ''
   });
 
@@ -25,6 +25,11 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -57,12 +62,14 @@ const Login = () => {
         <Box sx={{py: 2}}>
           <GoogleLogin
             onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
             }}
             onError={() => {
               console.log('error');
             }}
-          ></GoogleLogin>
+          />
         </Box>
         <Box component="form" noValidate onSubmit={onSubmit} sx={{mt: 3}}>
           <Grid container spacing={2}>
@@ -70,11 +77,11 @@ const Login = () => {
               <TextField
                 sx={{width: '100%'}}
                 required
-                label="Username"
-                name="username"
-                value={state.username}
+                label="Email"
+                name="email"
+                type="email"
+                value={state.email}
                 onChange={onChange}
-
                 autoComplete="current-username"
               />
             </Grid>
