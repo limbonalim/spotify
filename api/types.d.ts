@@ -1,10 +1,13 @@
 import { Model, Schema } from 'mongoose';
 
 export interface IUserFields {
-	username: string;
+	email: string;
 	password: string;
 	role: string;
 	token: string;
+	displayName: string;
+	googleID?: string;
+	avatar?: string;
 }
 
 export interface IUserMethods {

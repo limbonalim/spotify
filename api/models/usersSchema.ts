@@ -1,4 +1,4 @@
-import {Schema, model, HydratedDocument} from 'mongoose';
+import { Schema, model, HydratedDocument } from 'mongoose';
 import { randomUUID } from 'crypto';
 import bcrypt from 'bcrypt';
 import type { IUserFields, IUserMethods, IUserModel } from '../types';
@@ -7,22 +7,27 @@ const SALT_WORK_FACTOR = 10;
 
 export enum Roles {
 	user = 'user',
-	admin = 'admin'
+	admin = 'admin',
 }
 
 const usersSchema = new Schema<IUserFields, IUserModel, IUserMethods>({
-	username: {
+	email: {
 		type: String,
 		required: true,
 		unique: true,
 		validate: {
-			validator: async function (this: HydratedDocument<IUserFields>,username: string): Promise<boolean> {
-				if (!this.isModified('username')) return true;
-				const user: HydratedDocument<IUserFields> | null = await User.findOne({username});
+			validator: async function (
+				this: HydratedDocument<IUserFields>,
+				email: string,
+			): Promise<boolean> {
+				if (!this.isModified('email')) return true;
+				const user: HydratedDocument<IUserFields> | null = await User.findOne({
+					email,
+				});
 				return !user;
 			},
-			message: 'This user is already registered!',
-		}
+			message: 'This email is already registered!',
+		},
 	},
 	password: {
 		type: String,
@@ -38,6 +43,12 @@ const usersSchema = new Schema<IUserFields, IUserModel, IUserMethods>({
 		type: String,
 		required: true,
 	},
+	displayName: {
+		type: String,
+		required: true,
+	},
+	googleID: String,
+	avatar: String,
 });
 
 usersSchema.methods.checkPassword = function (password: string) {
