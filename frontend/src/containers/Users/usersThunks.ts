@@ -56,6 +56,22 @@ export const googleLogin = createAsyncThunk<IUser, string, { rejectValue: IMyErr
   },
 );
 
+export const gitHubLogin = createAsyncThunk<IUser, string, { rejectValue: IMyError }>(
+  'users/gitHubLogin',
+  async (code, {rejectWithValue}) => {
+    try {
+      const response = await axiosApi.post<IUser>('users/git_hub/auth', {code});
+      return response.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as IMyError);
+      }
+
+      throw e;
+    }
+  },
+);
+
 export const logout = createAsyncThunk<void, void, { state: RootState }>(
   'users/logout',
   async (_, {dispatch}) => {

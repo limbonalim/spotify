@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Avatar, Button, Container, Grid, Link, TextField, Typography, Box, Alert } from '@mui/material';
+import { Avatar, Button, Container, Grid, Link, TextField, Typography, Alert } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import Box from '@mui/material/Box';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectIsLoginLoading, selectLoginError } from './usersSlice.ts';
 import { googleLogin, login } from './usersThunks.ts';
+import { GITHUB_CLIENT_ID } from '../../constants.ts';
 import type { ILoginForm } from '../../types';
 
 const Login = () => {
@@ -18,6 +20,13 @@ const Login = () => {
     email: '',
     password: ''
   });
+
+  const params = new URLSearchParams({
+    client_id: GITHUB_CLIENT_ID,
+    redirect_uri: 'http://localhost:5173/',
+    scope: 'user',
+  });
+  const gitHubAuth = `https://github.com/login/oauth/authorize?${params}`;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -70,6 +79,9 @@ const Login = () => {
               console.log('error');
             }}
           />
+        </Box>
+        <Box sx={{py: 2}}>
+          <Link href={gitHubAuth} sx={{textDecoration: 'none'}}>Git hub</Link>
         </Box>
         <Box component="form" noValidate onSubmit={onSubmit} sx={{mt: 3}}>
           <Grid container spacing={2}>
