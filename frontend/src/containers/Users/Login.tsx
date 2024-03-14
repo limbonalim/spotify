@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Container, Grid, Link, TextField, Typography, Alert } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import Box from '@mui/material/Box';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
@@ -80,8 +81,9 @@ const Login = () => {
             }}
           />
         </Box>
-        <Box sx={{py: 2}}>
-          <Link href={gitHubAuth} sx={{textDecoration: 'none'}}>Git hub</Link>
+        <Box href={gitHubAuth} component={Link} sx={{py: 2, display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit'}}>
+          <GitHubIcon/>
+          <Typography>Git hub</Typography>
         </Box>
         <Box component="form" noValidate onSubmit={onSubmit} sx={{mt: 3}}>
           <Grid container spacing={2}>
