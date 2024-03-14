@@ -12,12 +12,24 @@ import ArtistForm from './containers/Home/ArtistForm.tsx';
 import AlbumForm from './containers/ArtistPage/AlbumForm.tsx';
 import TrackForm from './containers/AlbumPage/TrackForm.tsx';
 import AdminPage from './containers/AdminPage/AdminPage.tsx';
-import { useAppSelector } from './app/hooks.ts';
+import { useAppDispatch, useAppSelector } from './app/hooks.ts';
 import { selectCurrentTrack } from './containers/AlbumPage/tracksSlice.ts';
+import { useEffect } from 'react';
+import { gitHubLogin } from './containers/Users/usersThunks.ts';
 
 
 const App = () => {
   const currentTrack = useAppSelector(selectCurrentTrack);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const code = params.get('code');
+    if (code) {
+      dispatch(gitHubLogin(code));
+    }
+  }, []);
 
   return (
     <>
