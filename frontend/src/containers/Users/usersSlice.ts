@@ -62,10 +62,10 @@ export const usersSlice = createSlice({
 
     builder.addCase(gitHubLogin.pending, (state) => {
       state.isLoginLoading = true;
-    }).addCase(googleLogin.fulfilled, (state, { payload: user }) => {
+    }).addCase(gitHubLogin.fulfilled, (state, { payload: user }) => {
       state.isLoginLoading = false;
       state.user = user;
-    }).addCase(googleLogin.rejected, (state, { payload: error }) => {
+    }).addCase(gitHubLogin.rejected, (state, { payload: error }) => {
       state.isLoginLoading = false;
       state.loginError = error || null;
     });
