@@ -48,6 +48,7 @@ const usersSchema = new Schema<IUserFields, IUserModel, IUserMethods>({
 		required: true,
 	},
 	googleID: String,
+	gitHubID: String,
 	avatar: String,
 });
 

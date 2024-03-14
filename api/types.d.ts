@@ -7,6 +7,7 @@ export interface IUserFields {
 	token: string;
 	displayName: string;
 	googleID?: string;
+	gitHubID?: string;
 	avatar?: string;
 }
 

@@ -2,16 +2,15 @@ import express, { json } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import config from './config';
 import artistsRouter from './router/artists';
 import albumsRouter from './router/albums';
 import tracksRouter from './router/tracks';
 import usersRouter from './router/users';
 import trackHistoryRouter from './router/trackHistory';
 import adminsRouter from './router/admins';
-import config from './config';
 
 const app = express();
-const port = 8000;
 
 app.use(json());
 app.use(express.static('public'));
@@ -27,8 +26,8 @@ app.use('/admins', adminsRouter);
 const run = async () => {
 	await mongoose.connect(config.mongoose);
 
-	app.listen(port, () => {
-		console.log(`Server started on ${port} port!`);
+	app.listen(config.port, () => {
+		console.log(`Server started on ${config.port} port!`);
 	});
 
 	process.on('exit', () => {
