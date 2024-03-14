@@ -136,22 +136,6 @@ usersRouter.delete('/sessions', async (req, res, next) => {
 	}
 });
 
-// usersRouter.get('/git_hub', (req, res, next) => {
-// 	try {
-// 		const params = new URLSearchParams({
-// 			client_id: config.gitHub.clientId,
-// 			redirect_uri: 'http://localhost:8000/users/git_hub/auth/callback',
-// 			scope: 'user',
-// 		});
-//
-// 		const gitHubAuth = `https://github.com/login/oauth/authorize?${params}`;
-//
-// 		res.redirect(gitHubAuth);
-// 	} catch (e) {
-// 		next(e);
-// 	}
-// });
-
 usersRouter.post('/git_hub/auth', async (req, res, next) => {
 	try {
 		const code = req.body.code;
@@ -186,27 +170,27 @@ usersRouter.post('/git_hub/auth', async (req, res, next) => {
 			res.send({ message: 'No response data error' });
 		}
 
-		let user = await response.json();
-		const id = user.id;
-		const username = user.login;
-		const displayName = user.name;
-		const avatar = user.avatar_url;
-		const email = user.email || username;
+		const userData = await response.json();
+		const id = userData.id;
+		const username = userData.login;
+		const displayName = userData.name;
+		const avatar = userData.avatar_url;
+		const email = userData.email;
 
-		if (user) {
+		let user = await User.findOne({ gitHubID: id });
+		if (!user) {
 			user = new User({
-				email: email,
+				email: email ? email : `${username}@${id}`,
 				password: crypto.randomUUID(),
 				gitHubID: id,
 				displayName,
 				avatar,
 			});
-			user.generateToken();
-			await user.save();
-			return res.send(user);
 		}
 
-		return res.send({ message: 'No response data error' });
+		user.generateToken();
+		await user.save();
+		return res.send(user);
 	} catch (e) {
 		next(e);
 	}
