@@ -159,6 +159,13 @@ usersRouter.post('/git_hub/auth', async (req, res, next) => {
 		);
 
 		const tokenData = await tokenResponse.json();
+
+		if (!tokenResponse.ok) {
+			return res
+				.status(400)
+				.send({ message: 'Failed to authenticate with GitHub' });
+		}
+
 		const accessToken = tokenData.access_token;
 		const response = await fetch('https://api.github.com/user', {
 			headers: {
@@ -167,7 +174,7 @@ usersRouter.post('/git_hub/auth', async (req, res, next) => {
 		});
 
 		if (!response.ok) {
-			res.send({ message: 'No response data error' });
+			res.status(400).send({ message: 'No response data error' });
 		}
 
 		const userData = await response.json();

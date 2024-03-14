@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Layout from './components/UI/Layout/Layout.tsx';
 import Home from './containers/Home/Home.tsx';
 import NotFound from './components/UI/Not-Found/NotFound.tsx';
@@ -21,15 +21,17 @@ import { gitHubLogin } from './containers/Users/usersThunks.ts';
 const App = () => {
   const currentTrack = useAppSelector(selectCurrentTrack);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const query = window.location.search;
 
   useEffect(() => {
-    const query = window.location.search;
     const params = new URLSearchParams(query);
     const code = params.get('code');
     if (code) {
-      dispatch(gitHubLogin(code));
+      dispatch(gitHubLogin(code)).unwrap();
     }
-  }, []);
+    navigate('/');
+  }, [dispatch, query]);
 
   return (
     <>
